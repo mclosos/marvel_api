@@ -15,17 +15,21 @@ mongo = PyMongo(app)
 def get_all_heroes():
     marvel = mongo.db.marvel
     output = []
-    for s in marvel.find():
-        output.append({'name': s['name'], 'position': s['position'], 'universe': s['universe']})
+    for hero in marvel.find():
+        output.append({'name': hero['name'], 'height': hero['height'], 'weight': hero['weight'],
+                       'universe': hero['universe'], 'other_aliases': hero['other_aliases'],
+                       'education': hero['education'], 'identity': hero['identity']})
     return jsonify({'result': output})
 
 
 @app.route('/character/<name>', methods=['GET'])
 def get_one_hero(name):
     marvel = mongo.db.marvel
-    s = marvel.find_one({'name': name})
-    if s:
-        output = {'name': s['name'], 'position': s['position'], 'universe': s['universe']}
+    hero = marvel.find_one({'name': name})
+    if hero:
+        output = {'name': hero['name'], 'height': hero['height'], 'weight': hero['weight'],
+                  'universe': hero['universe'], 'other_aliases': hero['other_aliases'],
+                  'education': hero['education'], 'identity': hero['identity']}
     else:
         output = "No such name"
     return jsonify({'result': output})
@@ -39,11 +43,18 @@ def add_hero():
     if hero:
         output = f"{name} is already exists"
     else:
-        position = request.json['position']
+        height = request.json['height']
+        weight = request.json['weight']
         universe = request.json['universe']
-        hero_id = marvel.insert({'name': name, 'position': position, 'universe': universe})
+        other_aliases = request.json['other_aliases']
+        education = request.json['education']
+        identity = request.json['identity']
+        hero_id = marvel.insert({'name': name, 'height': height, 'weight': weight, 'universe': universe,
+                                 'other_aliases': other_aliases, 'education': education, 'identity': identity})
         new_hero = marvel.find_one({'_id': hero_id})
-        output = {'name': new_hero['name'], 'position': new_hero['position'], 'universe': new_hero['universe']}
+        output = {'name': new_hero['name'], 'height': new_hero['height'], 'weight': new_hero['weight'],
+                  'universe': new_hero['universe'], 'other_aliases': new_hero['other_aliases'],
+                  'education': new_hero['education'], 'identity': new_hero['identity']}
     return jsonify({'result': output})
 
 
@@ -53,11 +64,18 @@ def edit_hero(name):
     hero_id = marvel.find_one({'name': name})['_id']
     if hero_id:
         name = request.json['name']
-        position = request.json['position']
+        height = request.json['height']
+        weight = request.json['weight']
         universe = request.json['universe']
-        marvel.update_one({'name': name}, {'$set': {'position': position, 'universe': universe}})
+        other_aliases = request.json['other_aliases']
+        education = request.json['education']
+        identity = request.json['identity']
+        marvel.update_one({'name': name}, {'$set': {'height': height, 'weight': weight, 'universe': universe,
+                           'other_aliases': other_aliases, 'education': education, 'identity': identity}})
         new_hero = marvel.find_one({'_id': hero_id})
-        output = {'name': new_hero['name'], 'position': new_hero['position'], 'universe': new_hero['universe']}
+        output = {'name': new_hero['name'], 'height': new_hero['height'], 'weight': new_hero['weight'],
+                  'universe': new_hero['universe'], 'other_aliases': new_hero['other_aliases'],
+                  'education': new_hero['education'], 'identity': new_hero['identity']}
     else:
         output = "No such name"
     return jsonify({'result': [output]})
