@@ -16,20 +16,19 @@ def get_all_heroes():
     marvel = mongo.db.marvel
     output = []
     for hero in marvel.find():
-        output.append({'name': hero['name'], 'height': hero['height'], 'weight': hero['weight'],
-                       'universe': hero['universe'], 'other_aliases': hero['other_aliases'],
-                       'education': hero['education'], 'identity': hero['identity']})
+        del hero['_id']
+        output.append(hero)
     return jsonify({'result': output})
 
 
 @app.route('/character/<name>', methods=['GET'])
 def get_one_hero(name):
     marvel = mongo.db.marvel
+    output = []
     hero = marvel.find_one({'name': name})
     if hero:
-        output = {'name': hero['name'], 'height': hero['height'], 'weight': hero['weight'],
-                  'universe': hero['universe'], 'other_aliases': hero['other_aliases'],
-                  'education': hero['education'], 'identity': hero['identity']}
+        del hero['_id']
+        output.append(hero)
     else:
         output = "No such name"
     return jsonify({'result': output})

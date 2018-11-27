@@ -40,6 +40,19 @@ $ sudo chmod -R 755 /data/db
 $ sudo mongod start
 ```
 
+### Дамп базы
+
+База (а точнее коллекция _db.marvel_) наполняется скриптом _stan.py_. 
+Скрипт берет список персонажей из API Marvel, 
+скрапит информацию по ним в wiki Marvel, 
+после чего записывает данные в MongoDB. 
+Количество записей передается скрипту в виде числа. 
+
+```bash
+python stan.py 300
+```
+
+
 ### Команды API
 
 >GET /characters
@@ -77,7 +90,7 @@ curl 'http://127.0.0.1:5000/characters'
 >GET /character
 
 ```bash
-curl 'http://127.0.0.1:5000/character/Abyss'
+curl 'http://localhost:5000/character/Abyss'
 ```
 
 ```json
@@ -102,7 +115,7 @@ curl 'http://127.0.0.1:5000/character/Abyss'
            "education": "High school (unfinished)", "weight": 104, 
            "height": 1.90, "identity": "Publicly known", 
            "other_aliases": "None"}' 
-           'http://127.0.0.1:5000/character' 
+           'http://localhost:5000/character' 
 ```
 ```json
 {
@@ -127,7 +140,7 @@ curl -X PUT -H 'Content-type: application/json'
           "education": "High School (unfinished)", "weight": 104, 
           "height": 1.90, "identity": "Publicly known", 
           "other_aliases": "None"}' 
-          'http://127.0.0.1:5000/character/Hawkeye'
+          'http://localhost:5000/character/Hawkeye'
 ```
 
 ```json
@@ -149,7 +162,7 @@ curl -X PUT -H 'Content-type: application/json'
 >DELETE /character
 
 ```bash
-curl -X DELETE 'http://127.0.0.1:5000/character/Abyss'
+curl -X DELETE 'http://localhost:5000/character/Abyss'
 ```
 
 ```json
@@ -163,7 +176,7 @@ curl -X DELETE 'http://127.0.0.1:5000/character/Abyss'
 >Если по name невозможно найти коллекцию, то отдается стандартный ответ
 
 ```bash
-curl -X DELETE 'http://127.0.0.1:5000/character/Vovan'
+curl -X DELETE 'http://localhost:5000/character/Vovan'
 ```
 
 ```json
